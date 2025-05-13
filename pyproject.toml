@@ -7,7 +7,7 @@ name = "mcp-template"
 version = "0.1.0"
 description = "Whatsapp Agent Template"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11, <4.0"
 dependencies = [
     "langchain_community>=0.3.17,<0.4",
     "langchain_openai>=0.3.10,<0.4",
@@ -19,7 +19,12 @@ dependencies = [
     "jinja2>=3.1.6,<4",
     "twilio>=9.5.1, <10",
     "fastapi>=0.115.12",
-    "python-multipart>=0.0.20, <0.1.0"
+    "python-multipart>=0.0.20, <0.1.0",
+    "uvicorn[standard]>=0.29.0,<0.30",
+    "requests>=2.31.0,<3",
+    "python-dotenv>=1.0.0,<2",
+    "llama-index>=0.12.35,<1",
+    "weaviate-client>=4.14.3, <5"
 ]
 
 [[project.authors]]
