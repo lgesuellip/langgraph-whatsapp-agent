@@ -8,6 +8,7 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 from agents.base.tools import MEMORY_TOOLS, RAG_TOOLS
+from langchain_openai import ChatOpenAI
 
 load_dotenv()
 
@@ -38,8 +39,8 @@ async def build_agent():
     async with MultiServerMCPClient(zapier_server) as mail_client:
 
         mail_agent = create_react_agent(
-            model=ChatGoogleGenerativeAI(
-                model="gemini-2.0-flash-exp",
+            model=ChatOpenAI(
+                model="gpt-4.1",
             ),
             tools=mail_client.get_tools(),
             name="mail_agent",
@@ -47,8 +48,8 @@ async def build_agent():
         )
 
         researcher_agent = create_react_agent(
-            model=ChatGoogleGenerativeAI(
-                model="gemini-2.0-flash-exp",
+            model=ChatOpenAI(
+                model="gpt-4.1",
             ),
             tools=RAG_TOOLS,
             name="researcher_agent",
@@ -58,7 +59,7 @@ async def build_agent():
         graph = create_supervisor(
             [mail_agent, researcher_agent],
             model=ChatGoogleGenerativeAI(
-                model="gemini-2.0-flash-exp",
+                model="gpt-4.1",
             ),
             output_mode="last_message",
             prompt=SUPERVISOR_PROMPT.render(),
