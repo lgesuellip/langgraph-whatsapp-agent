@@ -1,4 +1,3 @@
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.prebuilt import create_react_agent
 from langgraph_supervisor import create_supervisor
 from contextlib import asynccontextmanager
@@ -53,7 +52,7 @@ async def build_agent():
             ),
             tools=RAG_TOOLS,
             name="researcher_agent",
-            prompt=RESEARCHER_AGENT_PROMPT.render(today=today)
+            prompt=RESEARCHER_AGENT_PROMPT.render()
         )
 
         graph = create_supervisor(
