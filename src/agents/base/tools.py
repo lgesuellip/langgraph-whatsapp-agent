@@ -1,4 +1,4 @@
-from langchain_core.tools import tool
+from langchain.tools import tool
 from typing import Dict, Any, Optional
 from pydantic import BaseModel, Field
 from llama_index.indices.managed.llama_cloud import LlamaCloudIndex
