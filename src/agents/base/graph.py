@@ -58,7 +58,7 @@ async def build_agent():
 
         graph = create_supervisor(
             [mail_agent, researcher_agent],
-            model=ChatGoogleGenerativeAI(
+            model=ChatOpenAI(
                 model="gpt-4.1",
             ),
             output_mode="last_message",
