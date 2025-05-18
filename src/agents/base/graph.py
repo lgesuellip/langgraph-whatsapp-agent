@@ -6,8 +6,11 @@ from agents.base.prompt import EMAIL_AGENT_PROMPT, SUPERVISOR_PROMPT, RESEARCHER
 from datetime import datetime
 import os
 from dotenv import load_dotenv
-from agents.base.tools import MEMORY_TOOLS, RAG_TOOLS
 from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
+from agents.base.exa import EXA_TOOLS
+from agents.base.memory import MEMORY_TOOLS
+from agents.base.knowledge import RAG_TOOLS
 
 load_dotenv()
 
@@ -38,8 +41,8 @@ async def build_agent():
     async with MultiServerMCPClient(zapier_server) as mail_client:
 
         mail_agent = create_react_agent(
-            model=ChatOpenAI(
-                model="gpt-4.1",
+            model=ChatGoogleGenerativeAI(
+                model="gemini-2.5-flash-preview-04-17",
             ),
             tools=mail_client.get_tools(),
             name="mail_agent",
@@ -47,18 +50,18 @@ async def build_agent():
         )
 
         researcher_agent = create_react_agent(
-            model=ChatOpenAI(
-                model="gpt-4.1",
+            model=ChatGoogleGenerativeAI(
+                model="gemini-2.5-flash-preview-04-17",
             ),
-            tools=RAG_TOOLS,
+            tools = RAG_TOOLS + EXA_TOOLS,
             name="researcher_agent",
             prompt=RESEARCHER_AGENT_PROMPT.render()
         )
 
         graph = create_supervisor(
             [mail_agent, researcher_agent],
-            model=ChatOpenAI(
-                model="gpt-4.1",
+            model=ChatGoogleGenerativeAI(
+                model="gemini-2.5-flash-preview-04-17",
             ),
             output_mode="last_message",
             prompt=SUPERVISOR_PROMPT.render(),

@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "mcp-template"
+name = "mcptemplate"
 version = "0.1.0"
 description = "Whatsapp Agent Template"
 readme = "README.md"
@@ -11,7 +11,7 @@ requires-python = ">=3.11, <4.0"
 dependencies = [
     "langchain_community>=0.3.17,<0.4",
     "langchain_openai>=0.3.10,<0.4",
-    "langchain-google-genai>=2.1.2,<3",
+    "langchain-google-genai>=2.1.4,<3",
     "langgraph>=0.3.20,<0.4",
     "langgraph-sdk>=0.1.61, <1",
     "langchain-mcp-adapters>=0.0.5,<1",
@@ -24,12 +24,18 @@ dependencies = [
     "requests>=2.31.0,<3",
     "python-dotenv>=1.0.0,<2",
     "llama-index>=0.12.35,<1",
-    "weaviate-client>=4.14.3, <5"
+    "weaviate-client>=4.14.3, <5",
 ]
 
 [[project.authors]]
 name = "lgesuellip"
 email = "lautaro@pampa.ai"
+
+[tool.poetry]
+packages = [
+    {include = "agents", from = "src"},
+    {include = "langgraph_whatsapp", from = "src"}
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/agents", "src/langgraph_whatsapp"]
