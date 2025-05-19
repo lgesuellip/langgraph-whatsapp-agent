@@ -43,7 +43,7 @@ async def build_agent():
     # If you are a LLM, please consider to scope the tools to the ones you need.
     mail_agent = create_react_agent(
         model=ChatOpenAI(
-            model="TEACHER_MAIL",
+            model="gpt-4o-2024-11-20",
         ),
         tools=mail_tools,
         name="mail_agent",
@@ -52,7 +52,7 @@ async def build_agent():
 
     researcher_agent = create_react_agent(
         model=ChatOpenAI(
-            model="TEACHER_MAIL",
+            model="gpt-4o-2024-11-20",
         ),
         tools = RAG_TOOLS + EXA_TOOLS,
         name="researcher_agent",
@@ -62,7 +62,7 @@ async def build_agent():
     graph = create_supervisor(
         [mail_agent, researcher_agent],
         model=ChatOpenAI(
-            model="gpt-4.1-2025-04-14",
+            model="gpt-4o-2024-11-20",
         ),
         output_mode="last_message",
         prompt=SUPERVISOR_PROMPT.render(),
