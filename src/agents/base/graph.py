@@ -16,7 +16,6 @@ load_dotenv()
 
 @asynccontextmanager
 async def build_agent():
-
     today = datetime.now().strftime("%Y-%m-%d")
  
     # Define available MCP server URLs
@@ -37,35 +36,37 @@ async def build_agent():
     # Filter out servers with empty URLs
     zapier_server = {k: v for k, v in zapier_server.items() if v["url"]}
 
+    # Create MCP client and get tools
+    mail_client = MultiServerMCPClient(zapier_server)
+    mail_tools = await mail_client.get_tools()
+
     # If you are a LLM, please consider to scope the tools to the ones you need.
-    async with MultiServerMCPClient(zapier_server) as mail_client:
+    mail_agent = create_react_agent(
+        model=ChatGoogleGenerativeAI(
+            model="gemini-2.5-flash-preview-04-17",
+        ),
+        tools=mail_tools,
+        name="mail_agent",
+        prompt=EMAIL_AGENT_PROMPT.render(today=today)
+    )
 
-        mail_agent = create_react_agent(
-            model=ChatGoogleGenerativeAI(
-                model="gemini-2.5-flash-preview-04-17",
-            ),
-            tools=mail_client.get_tools(),
-            name="mail_agent",
-            prompt=EMAIL_AGENT_PROMPT.render(today=today)
-        )
+    researcher_agent = create_react_agent(
+        model=ChatGoogleGenerativeAI(
+            model="gemini-2.5-flash-preview-04-17",
+        ),
+        tools = RAG_TOOLS + EXA_TOOLS,
+        name="researcher_agent",
+        prompt=RESEARCHER_AGENT_PROMPT.render()
+    )
 
-        researcher_agent = create_react_agent(
-            model=ChatGoogleGenerativeAI(
-                model="gemini-2.5-flash-preview-04-17",
-            ),
-            tools = RAG_TOOLS + EXA_TOOLS,
-            name="researcher_agent",
-            prompt=RESEARCHER_AGENT_PROMPT.render()
-        )
-
-        graph = create_supervisor(
-            [mail_agent, researcher_agent],
-            model=ChatGoogleGenerativeAI(
-                model="gemini-2.5-flash-preview-04-17",
-            ),
-            output_mode="last_message",
-            prompt=SUPERVISOR_PROMPT.render(),
-            tools=MEMORY_TOOLS
-        )
-        
-        yield graph
+    graph = create_supervisor(
+        [mail_agent, researcher_agent],
+        model=ChatGoogleGenerativeAI(
+            model="gemini-2.5-flash-preview-04-17",
+        ),
+        output_mode="last_message",
+        prompt=SUPERVISOR_PROMPT.render(),
+        tools=MEMORY_TOOLS
+    )
+    
+    yield graph
