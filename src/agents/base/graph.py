@@ -47,14 +47,14 @@ async def build_agent():
         ),
         tools=mail_tools,
         name="mail_agent",
-        prompt=EMAIL_AGENT_PROMPT.render(today=today)
+        prompt=EMAIL_AGENT_PROMPT.render(today=today, teacher_mail=os.getenv("TEACHER_MAIL"))
     )
 
     researcher_agent = create_react_agent(
         model=ChatOpenAI(
             model="gpt-4.1-2025-04-14",
         ),
-        tools = RAG_TOOLS,
+        tools = RAG_TOOLS + EXA_TOOLS,
         name="researcher_agent",
         prompt=RESEARCHER_AGENT_PROMPT.render()
     )
